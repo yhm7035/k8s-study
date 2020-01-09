@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ttyd-svc # (e.g. ttyd-svc)
+  labels:
+    app: ttyd
+    service: ttyd
+spec:
+  ports:
+  - port: 8080
+    name: ttyd-port
+    targetPort: 7681 # default is same number of port
+  selector:
+    app: ttyd # route service traffic to pods with label keys and values matching this selector (e.g. ttyd-pod)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: # describes the deployment itself
+  name: ttyd # unique key of the Deployment instance (e.g. ttyd-deployment)
+  labels:
+    app: ttyd # (e.g. ttyd-deployment)
+spec:
+  replicas: 1 # number of desired pods
+  selector: # field defines how the Deployment finds which Pods to manage
+    matchLabels: # tells what pods the deployment will apply to
+      app: ttyd # (e.g. ttyd-pod)
+  template: # It describes a pod that is launched
+    metadata:
+      labels:
+        app: ttyd # (e.g. ttyd-pod)
+    spec:
+      containers:
+      - image: docker.io/tsl0922/ttyd
+        imagePullPolicy: Always
+        name: ttyd # each container in a pod must have a unique name (e.g. ttyd-container)
+        ports:
+        - containerPort: 7681
+          protocol: TCP
+

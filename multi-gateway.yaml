@@ -1,0 +1,46 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: multi-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 15030
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: multi-vsvc
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - multi-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /ttyd
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: ttyd-svc
+        port:
+          number: 8080
+    websocketUpgrade: true
+  - match:
+    - uri:
+        prefix: /wonny/
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: wonny-svc
+        port:
+          number: 8090

@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wonny-svc # (e.g. ttyd-svc)
+  labels:
+    app: wonny
+    service: wonny
+spec:
+  ports:
+  - port: 8090
+    name: wonny-port
+    targetPort: 80
+  selector:
+    app: wonny
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: # describes the deployment itself
+  name: wonny
+  labels:
+    app: wonny
+spec:
+  replicas: 1 # number of desired pods
+  selector: # field defines how the Deployment finds which Pods to manage
+    matchLabels: # tells what pods the deployment will apply to
+      app: wonny
+  template: # It describes a pod that is launched
+    metadata:
+      labels:
+        app: wonny
+    spec:
+      containers:
+      - image: docker.io/yhm7035/wonny
+        imagePullPolicy: Always
+        name: wonny
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
