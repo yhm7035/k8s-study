@@ -44,3 +44,13 @@ spec:
         host: wonny-svc
         port:
           number: 8090
+  - match:
+    - uri:
+        prefix: /wiki
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: wiki-svc
+        port:
+          number: 8080
