@@ -46,7 +46,9 @@ spec:
           number: 8090
   - match:
     - uri:
-        prefix: /wiki
+        exact: /wiki
+    - uri:
+        prefix: /wiki/
     rewrite:
       uri: "/"
     route:
