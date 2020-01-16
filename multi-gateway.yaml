@@ -36,6 +36,8 @@ spec:
     websocketUpgrade: true
   - match:
     - uri:
+        exact: /wonny
+    - uri:
         prefix: /wonny/
     rewrite:
       uri: "/"
